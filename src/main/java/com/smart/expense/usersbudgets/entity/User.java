@@ -3,6 +3,8 @@ package com.smart.expense.usersbudgets.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -15,7 +17,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id;  // userId in API
 
     @Column(unique = true, nullable = false)
     private String email;
@@ -27,6 +29,7 @@ public class User {
 
     private String defaultCurrency;
 
+    // связи
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Budget> budgets;
+    private List<Budget> budgets = new ArrayList<>();
 }

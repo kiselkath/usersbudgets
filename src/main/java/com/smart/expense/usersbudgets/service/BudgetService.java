@@ -18,14 +18,50 @@ public class BudgetService {
     private final BudgetRepository budgetRepository;
     private final UserRepository userRepository;
 
-    public Budget createBudget(UUID userId, Budget budget) {
+    /**
+     * Создание бюджета для конкретного пользователя.
+     * @param userId идентификатор пользователя (Long)
+     * @param budget объект бюджета (без привязки к пользователю)
+     * @return сохранённый бюджет с привязкой к User
+     *
+     * Логика:
+     * 1. Проверяем, существует ли пользователь с данным userId.
+     * 2. Если пользователь найден — устанавливаем его в Budget.
+     * 3. Сохраняем Budget в базе.
+     */
+    public Budget createBudget(Long userId, Budget budget) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
-        budget.setUser(user);
+
+        budget.setUser(user); // привязываем бюджет к пользователю
         return budgetRepository.save(budget);
     }
 
-    public List<Budget> getBudgetsByUserAndMonth(UUID userId, String month) {
+    /**
+     * Получение всех бюджетов пользователя за указанный месяц.
+     * @param userId идентификатор пользователя (Long)
+     * @param month месяц в формате YYYY-MM
+     * @return список бюджетов
+     *
+     * Логика:
+     * 1. Запрашиваем все записи Budget по userId и месяцу.
+     * 2. Если бюджета нет — возвращается пустой список.
+     */
+    public List<Budget> getBudgetsByUserAndMonth(Long userId, String month) {
         return budgetRepository.findByUserIdAndMonth(userId, month);
+    }
+
+    /**
+     * Получение конкретного бюджета по его UUID.
+     * @param budgetId идентификатор бюджета (UUID)
+     * @return найденный бюджет
+     *
+     * Логика:
+     * 1. Проверяем, существует ли Budget с данным budgetId.
+     * 2. Если нет — выбрасываем ResourceNotFoundException.
+     */
+    public Budget getBudgetById(UUID budgetId) {
+        return budgetRepository.findById(budgetId)
+                .orElseThrow(() -> new ResourceNotFoundException("Budget not found with id " + budgetId));
     }
 }

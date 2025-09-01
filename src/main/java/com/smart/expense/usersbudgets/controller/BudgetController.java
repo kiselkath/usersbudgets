@@ -6,7 +6,6 @@ import com.smart.expense.usersbudgets.entity.Budget;
 import com.smart.expense.usersbudgets.service.BudgetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -23,43 +22,52 @@ public class BudgetController {
 
     @GetMapping
     public ResponseEntity<List<BudgetDTO>> getBudgets(
-            @AuthenticationPrincipal Principal principal,
+            Principal principal,
             @RequestParam String month
     ) {
-        UUID userId = UUID.fromString(principal.getName());  // JWT subject as UUID
+        Long userId = Long.parseLong(principal.getName());
         List<Budget> budgets = budgetService.getBudgetsByUserAndMonth(userId, month);
-        List<BudgetDTO> dtoList = budgets.stream().map(b -> BudgetDTO.builder()
-                .budgetId(b.getId().toString())
-                .userId(b.getUser().getId().toString())
-                .category(b.getCategory())
-                .amount(b.getAmount())
-                .month(b.getMonth())
-                .currency(b.getCurrency())
-                .build()).collect(Collectors.toList());
+
+        List<BudgetDTO> dtoList = budgets.stream()
+                .map(b -> BudgetDTO.builder()
+                        .budgetId(b.getId().toString())              // UUID
+                        .userId(b.getUser().getId().toString())      // Long
+                        .category(b.getCategory())
+                        .amount(b.getAmount())
+                        .month(b.getMonth())
+                        .currency(b.getCurrency())
+                        .build())
+                .collect(Collectors.toList());
+
         return ResponseEntity.ok(dtoList);
     }
 
     @PostMapping
     public ResponseEntity<BudgetDTO> createBudget(
-            @AuthenticationPrincipal Principal principal,
+            Principal principal,
             @RequestBody CreateBudgetRequest request
     ) {
-        UUID userId = UUID.fromString(principal.getName());
+        Long userId = Long.parseLong(principal.getName());
+
         Budget budget = Budget.builder()
                 .category(request.getCategory())
                 .amount(request.getAmount())
                 .month(request.getMonth())
                 .currency(request.getCurrency())
                 .build();
+
         Budget saved = budgetService.createBudget(userId, budget);
+
         BudgetDTO dto = BudgetDTO.builder()
-                .budgetId(saved.getId().toString())
-                .userId(saved.getUser().getId().toString())
+                .budgetId(saved.getId().toString())              // UUID
+                .userId(saved.getUser().getId().toString())      // Long
                 .category(saved.getCategory())
                 .amount(saved.getAmount())
                 .month(saved.getMonth())
                 .currency(saved.getCurrency())
                 .build();
+
         return ResponseEntity.status(201).body(dto);
     }
 }
+

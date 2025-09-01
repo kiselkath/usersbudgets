@@ -7,5 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface BudgetRepository extends JpaRepository<Budget, UUID> {
-    List<Budget> findByUserIdAndMonth(UUID userId, String month);
+
+    // ищем по user.id (Long) и месяцу
+    List<Budget> findByUserIdAndMonth(Long userId, String month);
 }

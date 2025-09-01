@@ -15,7 +15,7 @@ public class Budget {
 
     @Id
     @GeneratedValue
-    private UUID id;
+    private UUID id; // budgetId in API
 
     private String category;
 

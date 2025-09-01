@@ -3,12 +3,13 @@ package com.smart.expense.usersbudgets.dto;
 import lombok.*;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class CreateBudgetRequest {
     private String category;
     private Double amount;
-    private String month;      // YYYY-MM
+    private String month;
     private String currency;
 }
+

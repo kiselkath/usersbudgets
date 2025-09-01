@@ -3,12 +3,12 @@ package com.smart.expense.usersbudgets.dto;
 import lombok.*;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class BudgetDTO {
-    private String budgetId;
-    private String userId;
+    private String budgetId; // UUID как строка
+    private String userId;   // Long как строка
     private String category;
     private Double amount;
     private String month;
