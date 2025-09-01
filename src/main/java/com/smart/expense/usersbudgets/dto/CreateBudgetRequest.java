@@ -6,11 +6,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BudgetDTO {
-    private String budgetId;
-    private String userId;
+public class CreateBudgetRequest {
     private String category;
     private Double amount;
-    private String month;
+    private String month;      // YYYY-MM
     private String currency;
 }
