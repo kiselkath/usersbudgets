@@ -1,16 +1,30 @@
 package com.smart.expense.usersbudgets.dto;
 
+import jakarta.validation.constraints.*;
 import lombok.*;
+
+import java.math.BigDecimal;
+import java.util.UUID;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class BudgetDTO {
-    private String budgetId; // UUID как строка
-    private String userId;   // Long как строка
+    private UUID budgetId; // используется только в ответах
+    private Long userId;   // тоже в ответах
+
+    @NotBlank(message = "Category is required")
     private String category;
-    private Double amount;
+
+    @NotNull(message = "Amount is required")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Amount must be greater than 0")
+    private BigDecimal amount;
+
+    @NotBlank(message = "Month is required")
+    @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])$", message = "Month must be in format YYYY-MM")
     private String month;
+
+    @NotBlank(message = "Currency is required")
     private String currency;
 }
