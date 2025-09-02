@@ -1,5 +1,6 @@
 package com.smart.expense.usersbudgets.service;
 
+import com.smart.expense.usersbudgets.dto.BudgetDTO;
 import com.smart.expense.usersbudgets.entity.Budget;
 import com.smart.expense.usersbudgets.entity.User;
 import com.smart.expense.usersbudgets.exception.ResourceNotFoundException;
@@ -20,14 +21,6 @@ public class BudgetService {
 
     /**
      * Создание бюджета для конкретного пользователя.
-     * @param userId идентификатор пользователя (Long)
-     * @param budget объект бюджета (без привязки к пользователю)
-     * @return сохранённый бюджет с привязкой к User
-     *
-     * Логика:
-     * 1. Проверяем, существует ли пользователь с данным userId.
-     * 2. Если пользователь найден — устанавливаем его в Budget.
-     * 3. Сохраняем Budget в базе.
      */
     public Budget createBudget(Long userId, Budget budget) {
         User user = userRepository.findById(userId)
@@ -39,13 +32,6 @@ public class BudgetService {
 
     /**
      * Получение всех бюджетов пользователя за указанный месяц.
-     * @param userId идентификатор пользователя (Long)
-     * @param month месяц в формате YYYY-MM
-     * @return список бюджетов
-     *
-     * Логика:
-     * 1. Запрашиваем все записи Budget по userId и месяцу.
-     * 2. Если бюджета нет — возвращается пустой список.
      */
     public List<Budget> getBudgetsByUserAndMonth(Long userId, String month) {
         return budgetRepository.findByUserIdAndMonth(userId, month);
@@ -53,15 +39,34 @@ public class BudgetService {
 
     /**
      * Получение конкретного бюджета по его UUID.
-     * @param budgetId идентификатор бюджета (UUID)
-     * @return найденный бюджет
-     *
-     * Логика:
-     * 1. Проверяем, существует ли Budget с данным budgetId.
-     * 2. Если нет — выбрасываем ResourceNotFoundException.
      */
     public Budget getBudgetById(UUID budgetId) {
         return budgetRepository.findById(budgetId)
                 .orElseThrow(() -> new ResourceNotFoundException("Budget not found with id " + budgetId));
+    }
+
+    /**
+     * Обновление бюджета.
+     */
+    public Budget updateBudget(UUID budgetId, BudgetDTO dto) {
+        Budget budget = budgetRepository.findById(budgetId)
+                .orElseThrow(() -> new ResourceNotFoundException("Budget not found: " + budgetId));
+
+        budget.setCategory(dto.getCategory());
+        budget.setAmount(dto.getAmount());
+        budget.setMonth(dto.getMonth());
+        budget.setCurrency(dto.getCurrency());
+
+        return budgetRepository.save(budget);
+    }
+
+    /**
+     * Удаление бюджета.
+     */
+    public void deleteBudget(UUID budgetId) {
+        if (!budgetRepository.existsById(budgetId)) {
+            throw new ResourceNotFoundException("Budget not found: " + budgetId);
+        }
+        budgetRepository.deleteById(budgetId);
     }
 }

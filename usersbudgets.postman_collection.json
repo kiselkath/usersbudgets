@@ -1,0 +1,147 @@
+{
+  "info": {
+    "name": "UsersBudgets Local API",
+    "_postman_id": "a3c1e2f5-1111-4444-aaaa-123456789abc",
+    "description": "Коллекция для локального тестирования сервиса UsersBudgets",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get Budgets (Public API)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "1",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/budgets?month=2025-09",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["budgets"],
+          "query": [
+            { "key": "month", "value": "2025-09" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create Budget (Public API)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "1",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"category\": \"Food\",\n  \"amount\": 300.00,\n  \"month\": \"2025-09\",\n  \"currency\": \"USD\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/budgets",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["budgets"]
+        }
+      }
+    },
+    {
+      "name": "Get Budget by ID (Public API)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "1",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/budgets/{{budgetId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["budgets", "{{budgetId}}"]
+        }
+      }
+    },
+    {
+      "name": "Update Budget (Public API)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "1",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"category\": \"Transport\",\n  \"amount\": 120.00,\n  \"month\": \"2025-09\",\n  \"currency\": \"USD\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/budgets/{{budgetId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["budgets", "{{budgetId}}"]
+        }
+      }
+    },
+    {
+      "name": "Delete Budget (Public API)",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "1",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/budgets/{{budgetId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["budgets", "{{budgetId}}"]
+        }
+      }
+    },
+    {
+      "name": "Internal API: Get Budgets by User",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8080/internal/budgets-by-user/1?month=2025-09",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["internal", "budgets-by-user", "1"],
+          "query": [
+            { "key": "month", "value": "2025-09" }
+          ]
+        }
+      }
+    }
+  ]
+}

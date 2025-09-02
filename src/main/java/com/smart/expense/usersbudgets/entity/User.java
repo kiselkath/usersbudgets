@@ -5,7 +5,6 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -17,7 +16,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;  // userId in API
+    private Long id;  // внутреннее поле БД
 
     @Column(unique = true, nullable = false)
     private String email;
@@ -32,4 +31,12 @@ public class User {
     // связи
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Budget> budgets = new ArrayList<>();
+
+    /**
+     * Удобный метод для API:
+     * возвращает id как userId
+     */
+    public Long getUserId() {
+        return this.id;
+    }
 }

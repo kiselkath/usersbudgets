@@ -18,32 +18,14 @@ public class InternalBudgetController {
 
     private final BudgetService budgetService;
 
-    /**
-     * Внутренний эндпоинт для получения бюджетов конкретного пользователя.
-     * Используется другими сервисами (например, Report Service).
-     *
-     * Пример запроса:
-     * GET /internal/budgets-by-user/42?month=2025-09
-     *
-     * Ответ:
-     * [
-     *   { "category": "Groceries", "amount": 500.00 },
-     *   { "category": "Transport", "amount": 100.00 }
-     * ]
-     *
-     * Логика:
-     * 1. Сервис получает все бюджеты пользователя за месяц.
-     * 2. На выход отдаются только category + amount,
-     *    т.к. для внутреннего API остальная информация (budgetId, currency) не нужна.
-     */
+    // GET /internal/budgets-by-user/{userId}?month=YYYY-MM
     @GetMapping("/budgets-by-user/{userId}")
     public ResponseEntity<List<Map<String, Object>>> getBudgetsByUser(
             @PathVariable Long userId,
             @RequestParam String month
     ) {
-        List<Budget> budgets = budgetService.getBudgetsByUserAndMonth(userId, month);
-
-        List<Map<String, Object>> response = budgets.stream()
+        List<Map<String, Object>> response = budgetService.getBudgetsByUserAndMonth(userId, month)
+                .stream()
                 .map(b -> {
                     Map<String, Object> map = new HashMap<>();
                     map.put("category", b.getCategory());
