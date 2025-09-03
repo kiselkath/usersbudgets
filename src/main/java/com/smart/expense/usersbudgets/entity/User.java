@@ -1,5 +1,6 @@
 package com.smart.expense.usersbudgets.entity;
 
+import com.smart.expense.usersbudgets.dto.UserDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -39,4 +40,24 @@ public class User {
     public Long getUserId() {
         return this.id;
     }
+    public UserDTO toDTO() {
+        return UserDTO.builder()
+                .userId(this.id)
+                .email(this.email)
+                .password(null) // пароль лучше не возвращать наружу
+                .name(this.name)
+                .defaultCurrency(this.defaultCurrency)
+                .build();
+    }
+
+    public static User fromDTO(UserDTO dto) {
+        return User.builder()
+                .id(dto.getUserId())
+                .email(dto.getEmail())
+                .password(dto.getPassword())
+                .name(dto.getName())
+                .defaultCurrency(dto.getDefaultCurrency())
+                .build();
+    }
+
 }
