@@ -10,52 +10,37 @@ import java.util.UUID;
 @Entity
 @Table(name = "budgets")
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Budget {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID budgetId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private String userId; // теперь String, берется из JWT
 
-    @Column(nullable = false)
     private String category;
-
-    @Column(nullable = false)
     private BigDecimal amount;
-
-    @Column(nullable = false)
-    private String month; // YYYY-MM
-
-    @Column(nullable = false)
+    private String month;
     private String currency;
 
-    /**
-     * Конвертация Budget → BudgetDTO
-     */
     public BudgetDTO toDTO() {
         return BudgetDTO.builder()
-                .budgetId(this.budgetId)
-                .userId(this.user != null ? this.user.getUserId() : null)
-                .category(this.category)
-                .amount(this.amount)
-                .month(this.month)
-                .currency(this.currency)
+                .budgetId(budgetId)
+                .userId(userId)
+                .category(category)
+                .amount(amount)
+                .month(month)
+                .currency(currency)
                 .build();
     }
 
-    /**
-     * Конвертация BudgetDTO → Budget
-     * (без user, user привязывается в сервисе)
-     */
     public static Budget fromDTO(BudgetDTO dto) {
         return Budget.builder()
                 .budgetId(dto.getBudgetId())
+                .userId(dto.getUserId())
                 .category(dto.getCategory())
                 .amount(dto.getAmount())
                 .month(dto.getMonth())

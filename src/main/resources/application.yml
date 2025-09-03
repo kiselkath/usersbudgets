@@ -1,0 +1,23 @@
+server:
+  port: 8082
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${GOOGLE_CLIENT_ID}
+          audiences: ${GOOGLE_CLIENT_ID}
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/usersbudgets
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true

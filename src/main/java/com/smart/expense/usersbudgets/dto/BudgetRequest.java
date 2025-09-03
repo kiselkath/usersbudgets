@@ -6,7 +6,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CreateBudgetRequest {
+public class BudgetRequest {
     private String category;
     private Double amount;
     private String month;

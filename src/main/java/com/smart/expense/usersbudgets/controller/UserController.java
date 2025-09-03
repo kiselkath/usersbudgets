@@ -1,9 +1,11 @@
 package com.smart.expense.usersbudgets.controller;
 
+import com.smart.expense.usersbudgets.dto.UserDTO;
 import com.smart.expense.usersbudgets.entity.User;
 import com.smart.expense.usersbudgets.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,9 +22,27 @@ public class UserController {
         return ResponseEntity.ok(userService.createUser(user));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getUserById(id));
+    @GetMapping("/me")
+    public ResponseEntity<UserDTO> getMyProfile(Authentication authentication) {
+        String userId = authentication.getName();
+        User user = userService.getUserById(userId);
+        return ResponseEntity.ok(UserDTO.builder()
+                .userId(user.getUserId())
+                .email(user.getEmail())
+                .name(user.getName())
+                .defaultCurrency(user.getDefaultCurrency())
+                .build());
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserDTO> getUser(@PathVariable String userId) {
+        User user = userService.getUserById(userId);
+        return ResponseEntity.ok(UserDTO.builder()
+                .userId(user.getUserId())
+                .email(user.getEmail())
+                .name(user.getName())
+                .defaultCurrency(user.getDefaultCurrency())
+                .build());
     }
 
     @GetMapping

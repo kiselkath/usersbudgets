@@ -1,5 +1,6 @@
 package com.smart.expense.usersbudgets.service;
 
+import com.smart.expense.usersbudgets.dto.UserDTO;
 import com.smart.expense.usersbudgets.entity.User;
 import com.smart.expense.usersbudgets.exception.ResourceNotFoundException;
 import com.smart.expense.usersbudgets.repository.UserRepository;
@@ -14,19 +15,24 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    // Создание пользователя
     public User createUser(User user) {
         return userRepository.save(user);
     }
 
-    // Получение пользователя по id
-    public User getUserById(Long userId) {
+    public User getUserById(String userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + userId));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
     }
 
-    // Получение всех пользователей
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public User updateUser(String userId, UserDTO dto) {
+        User user = getUserById(userId);
+        user.setEmail(dto.getEmail());
+        user.setName(dto.getName());
+        user.setDefaultCurrency(dto.getDefaultCurrency());
+        return userRepository.save(user);
     }
 }

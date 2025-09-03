@@ -8,11 +8,12 @@ import java.util.UUID;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class BudgetDTO {
-    private UUID budgetId; // используется только в ответах
-    private Long userId;   // тоже в ответах
+
+    private UUID budgetId; // только для ответов
+    private String userId; // только для ответов
 
     @NotBlank(message = "Category is required")
     private String category;
