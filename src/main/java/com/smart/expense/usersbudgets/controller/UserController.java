@@ -17,10 +17,13 @@ public class UserController {
 
     private final UserService userService;
 
+    // Создание нового пользователя
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.createUser(user));
+        User created = userService.create(user);
+        return ResponseEntity.ok(created);
     }
+
 
     @GetMapping("/me")
     public ResponseEntity<UserDTO> getMyProfile(Authentication authentication) {
