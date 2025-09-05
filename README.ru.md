@@ -124,3 +124,52 @@ mvn spring-boot:run
 
 `application.yml` использует настройки JWT `issuer-uri` и подключения к PostgreSQL. Пароли пользователей в сервисе не используются.
 
+## 🐳 Запуск через Docker Compose
+
+Предварительно убедитесь, что создана внешняя сеть (используется в compose):
+
+```bash
+docker network create smart-expense-net || true
+```
+
+Сборка и запуск сервисов в фоне:
+
+```bash
+docker compose up -d --build
+```
+
+Проверка логов приложения:
+
+```bash
+docker compose logs -f usersbudgets-service
+```
+
+Остановка без удаления данных:
+
+```bash
+docker compose stop
+```
+
+Полная остановка и удаление контейнеров (volume БД сохранится):
+
+```bash
+docker compose down
+```
+
+Пересборка только сервиса приложения:
+
+```bash
+docker compose up -d --build usersbudgets-service
+```
+
+Полезные параметры окружения (можно добавить/переопределить в compose):
+
+```bash
+# Примеры
+JWT_ISSUER_URI=http://auth:8080/realms/smart-expenses
+JWT_AUDIENCE=smart-expenses
+SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/smart_expense_db
+SPRING_DATASOURCE_USERNAME=user
+SPRING_DATASOURCE_PASSWORD=password
+```
+

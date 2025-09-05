@@ -124,3 +124,52 @@ App URL: `http://localhost:8082`
 
 `application.yml` uses JWT `issuer-uri` and PostgreSQL connection. User passwords are not used in this service.
 
+## 🐳 Run with Docker Compose
+
+Ensure the external network exists (used by compose):
+
+```bash
+docker network create smart-expense-net || true
+```
+
+Build and start services in background:
+
+```bash
+docker compose up -d --build
+```
+
+Tail application logs:
+
+```bash
+docker compose logs -f usersbudgets-service
+```
+
+Stop without removing data:
+
+```bash
+docker compose stop
+```
+
+Full stop and remove containers (DB volume preserved):
+
+```bash
+docker compose down
+```
+
+Rebuild only the app service:
+
+```bash
+docker compose up -d --build usersbudgets-service
+```
+
+Useful environment overrides (can be added/overridden in compose):
+
+```bash
+# Examples
+JWT_ISSUER_URI=http://auth:8080/realms/smart-expenses
+JWT_AUDIENCE=smart-expenses
+SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/smart_expense_db
+SPRING_DATASOURCE_USERNAME=user
+SPRING_DATASOURCE_PASSWORD=password
+```
+
