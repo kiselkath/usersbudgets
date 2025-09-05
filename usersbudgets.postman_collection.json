@@ -2,9 +2,31 @@
   "info": {
     "name": "Users & Budgets Service",
     "_postman_id": "b8f2b8b1-1234-4d6b-a789-9a12cdef3456",
-    "description": "Postman collection for Users & Budgets Service (Smart Expense Tracker)",
+    "description": "Postman collection for Users & Budgets Service (Smart Expense Tracker) - Updated for JWT Authentication",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8082",
+      "type": "string"
+    },
+    {
+      "key": "jwtToken",
+      "value": "YOUR_JWT_TOKEN_HERE",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "YOUR_USER_ID_HERE",
+      "type": "string"
+    },
+    {
+      "key": "budgetId",
+      "value": "YOUR_BUDGET_ID_HERE",
+      "type": "string"
+    }
+  ],
   "item": [
     {
       "name": "Users",
@@ -20,31 +42,52 @@
               }
             ],
             "url": {
-              "raw": "http://localhost:8082/users",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "8082",
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
               "path": ["users"]
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Kate\",\n  \"email\": \"kate@example.com\",\n  \"defaultCurrency\": \"EUR\"\n}"
+              "raw": "{\n  \"name\": \"Kate Kiselevich\",\n  \"email\": \"kate@example.com\",\n  \"password\": \"securePassword123\"\n}"
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Get User by ID",
           "request": {
             "method": "GET",
-            "url": "http://localhost:8082/users/1"
-          }
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "{{userId}}"]
+            }
+          },
+          "response": []
         },
         {
           "name": "Get All Users",
           "request": {
             "method": "GET",
-            "url": "http://localhost:8082/users"
-          }
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -52,7 +95,143 @@
       "name": "Budgets",
       "item": [
         {
-          "name": "Create Budget",
+          "name": "Create Budget for User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/budgets/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["budgets", "{{userId}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"Food\",\n  \"amount\": 300.50,\n  \"month\": \"2025-09\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Budgets for User and Month",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/budgets/{{userId}}?month=2025-09",
+              "host": ["{{baseUrl}}"],
+              "path": ["budgets", "{{userId}}"],
+              "query": [
+                {
+                  "key": "month",
+                  "value": "2025-09"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Budget - Transport",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/budgets/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["budgets", "{{userId}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"Transport\",\n  \"amount\": 150.00,\n  \"month\": \"2025-09\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Budget - Entertainment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/budgets/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["budgets", "{{userId}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"Entertainment\",\n  \"amount\": 200.00,\n  \"month\": \"2025-09\"\n}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Internal API",
+      "item": [
+        {
+          "name": "Get Budgets by User (Internal)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/internal/budgets-by-user/{{userId}}?month=2025-09",
+              "host": ["{{baseUrl}}"],
+              "path": ["internal", "budgets-by-user", "{{userId}}"],
+              "query": [
+                {
+                  "key": "month",
+                  "value": "2025-09"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Test Scenarios",
+      "item": [
+        {
+          "name": "1. Create User",
           "request": {
             "method": "POST",
             "header": [
@@ -61,62 +240,150 @@
                 "value": "application/json"
               }
             ],
-            "url": "http://localhost:8082/budgets",
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"category\": \"Food\",\n  \"amount\": 300.0,\n  \"month\": \"2025-09\"\n}"
+              "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"testPassword123\"\n}"
             }
-          }
+          },
+          "response": []
         },
         {
-          "name": "Get Budgets for Month",
+          "name": "2. Create Multiple Budgets",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/budgets/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["budgets", "{{userId}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"Groceries\",\n  \"amount\": 500.00,\n  \"month\": \"2025-09\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Get All Budgets for Month",
           "request": {
             "method": "GET",
-            "url": "http://localhost:8082/budgets?month=2025-09"
-          }
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/budgets/{{userId}}?month=2025-09",
+              "host": ["{{baseUrl}}"],
+              "path": ["budgets", "{{userId}}"],
+              "query": [
+                {
+                  "key": "month",
+                  "value": "2025-09"
+                }
+              ]
+            }
+          },
+          "response": []
         },
         {
-          "name": "Get Budget by ID",
+          "name": "4. Test Security - Access Another User's Data",
           "request": {
             "method": "GET",
-            "url": "http://localhost:8082/budgets/{{budgetId}}"
-          }
-        },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/00000000-0000-0000-0000-000000000000",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "00000000-0000-0000-0000-000000000000"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Error Testing",
+      "item": [
         {
-          "name": "Update Budget",
+          "name": "Invalid User Data",
           "request": {
-            "method": "PUT",
+            "method": "POST",
             "header": [
               {
                 "key": "Content-Type",
                 "value": "application/json"
               }
             ],
-            "url": "http://localhost:8082/budgets/{{budgetId}}",
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"category\": \"Transport\",\n  \"amount\": 150.0,\n  \"month\": \"2025-09\"\n}"
+              "raw": "{\n  \"name\": \"\",\n  \"email\": \"invalid-email\",\n  \"password\": \"\"\n}"
             }
-          }
+          },
+          "response": []
         },
         {
-          "name": "Delete Budget",
+          "name": "Invalid Budget Data",
           "request": {
-            "method": "DELETE",
-            "url": "http://localhost:8082/budgets/{{budgetId}}"
-          }
-        }
-      ]
-    },
-    {
-      "name": "Internal",
-      "item": [
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/budgets/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["budgets", "{{userId}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"\",\n  \"amount\": -100,\n  \"month\": \"invalid-month\"\n}"
+            }
+          },
+          "response": []
+        },
         {
-          "name": "Get Budgets by User (Internal)",
+          "name": "Unauthorized Request",
           "request": {
             "method": "GET",
-            "url": "http://localhost:8082/internal/budgets-by-user/1?month=2025-09"
-          }
+            "url": {
+              "raw": "{{baseUrl}}/users/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "{{userId}}"]
+            }
+          },
+          "response": []
         }
       ]
     }

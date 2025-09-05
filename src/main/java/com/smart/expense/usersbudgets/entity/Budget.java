@@ -17,34 +17,38 @@ public class Budget {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID budgetId;
+    private UUID id;
 
-    private String userId; // теперь String, берется из JWT
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
+    @Column(nullable = false)
     private String category;
+
+    @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal amount;
+
+    @Column(nullable = false)
     private String month;
-    private String currency;
 
     public BudgetDTO toDTO() {
         return BudgetDTO.builder()
-                .budgetId(budgetId)
-                .userId(userId)
-                .category(category)
-                .amount(amount)
-                .month(month)
-                .currency(currency)
+                .id(this.id)
+                .userId(this.user.getId())
+                .category(this.category)
+                .amount(this.amount)
+                .month(this.month)
                 .build();
     }
 
-    public static Budget fromDTO(BudgetDTO dto) {
+    public static Budget fromDTO(BudgetDTO dto, User user) {
         return Budget.builder()
-                .budgetId(dto.getBudgetId())
-                .userId(dto.getUserId())
+                .id(dto.getId())
+                .user(user)
                 .category(dto.getCategory())
                 .amount(dto.getAmount())
                 .month(dto.getMonth())
-                .currency(dto.getCurrency())
                 .build();
     }
 }

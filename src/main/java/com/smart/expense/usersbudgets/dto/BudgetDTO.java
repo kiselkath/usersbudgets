@@ -12,8 +12,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class BudgetDTO {
 
-    private UUID budgetId; // только для ответов
-    private String userId; // только для ответов
+    private UUID id; // только для ответов
+    private UUID userId; // только для ответов
 
     @NotBlank(message = "Category is required")
     private String category;
@@ -25,7 +25,4 @@ public class BudgetDTO {
     @NotBlank(message = "Month is required")
     @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])$", message = "Month must be in format YYYY-MM")
     private String month;
-
-    @NotBlank(message = "Currency is required")
-    private String currency;
 }

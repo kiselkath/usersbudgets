@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -15,7 +16,8 @@ import java.util.List;
 public class User {
 
     @Id
-    private String userId; // уникальный идентификатор пользователя, берется из auth-service
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(unique = true, nullable = false)
     private String email;
@@ -23,9 +25,10 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-    private String defaultCurrency;
+    @Column(nullable = false)
+    private String password;
 
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
-    private List<Budget> budgets = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private final List<Budget> budgets = new ArrayList<>();
 
 }

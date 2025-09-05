@@ -1,14 +1,15 @@
 package com.smart.expense.usersbudgets.dto;
 
 import lombok.*;
+import java.util.UUID;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO {
-    private String userId;          // идентификатор пользователя
+    private UUID id;
     private String email;
     private String name;
-    private String defaultCurrency;
+    private String password;
 }

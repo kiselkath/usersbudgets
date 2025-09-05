@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/internal/budgets-by-user")
@@ -18,12 +19,12 @@ public class InternalBudgetController {
 
     @GetMapping("/{userId}")
     public ResponseEntity<List<Map<String, Object>>> getBudgetsByUser(
-            @PathVariable String userId,
+            @PathVariable UUID userId,
             @RequestParam String month,
             Authentication authentication
     ) {
         String authenticatedUserId = authentication.getName();
-        if (!authenticatedUserId.equals(userId)) {
+        if (!authenticatedUserId.equals(userId.toString())) {
             throw new SecurityException("Access Denied: Cannot access another user's budgets");
         }
 

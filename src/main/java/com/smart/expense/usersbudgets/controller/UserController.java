@@ -8,7 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
+import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
@@ -19,37 +22,42 @@ public class UserController {
 
     // Создание нового пользователя
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User created = userService.create(user);
-        return ResponseEntity.ok(created);
+    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
+        User created = userService.create(userDTO);
+        UserDTO response = UserDTO.builder()
+                .id(created.getId())
+                .email(created.getEmail())
+                .name(created.getName())
+                .build();
+        return ResponseEntity.created(URI.create("/users/" + created.getId())).body(response);
     }
 
-
-    @GetMapping("/me")
-    public ResponseEntity<UserDTO> getMyProfile(Authentication authentication) {
-        String userId = authentication.getName();
-        User user = userService.getUserById(userId);
-        return ResponseEntity.ok(UserDTO.builder()
-                .userId(user.getUserId())
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> getUser(@PathVariable UUID id, Authentication authentication) {
+        // Проверяем, что пользователь запрашивает свои данные
+        String authenticatedUserId = authentication.getName();
+        if (!authenticatedUserId.equals(id.toString())) {
+            throw new SecurityException("Access Denied: Cannot access another user's data");
+        }
+        
+        User user = userService.getUserById(id);
+        UserDTO response = UserDTO.builder()
+                .id(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
-                .defaultCurrency(user.getDefaultCurrency())
-                .build());
-    }
-
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserDTO> getUser(@PathVariable String userId) {
-        User user = userService.getUserById(userId);
-        return ResponseEntity.ok(UserDTO.builder()
-                .userId(user.getUserId())
-                .email(user.getEmail())
-                .name(user.getName())
-                .defaultCurrency(user.getDefaultCurrency())
-                .build());
+                .build();
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        List<UserDTO> users = userService.getAllUsers().stream()
+                .map(user -> UserDTO.builder()
+                        .id(user.getId())
+                        .email(user.getEmail())
+                        .name(user.getName())
+                        .build())
+                .toList();
+        return ResponseEntity.ok(users);
     }
 }
