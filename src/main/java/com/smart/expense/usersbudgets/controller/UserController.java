@@ -20,7 +20,6 @@ public class UserController {
 
     private final UserService userService;
 
-    // Создание нового пользователя
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
         User created = userService.create(userDTO);
@@ -34,12 +33,10 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUser(@PathVariable UUID id, Authentication authentication) {
-        // Проверяем, что пользователь запрашивает свои данные
         String authenticatedUserId = authentication.getName();
         if (!authenticatedUserId.equals(id.toString())) {
             throw new SecurityException("Access Denied: Cannot access another user's data");
         }
-        
         User user = userService.getUserById(id);
         UserDTO response = UserDTO.builder()
                 .id(user.getId())
