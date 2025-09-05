@@ -1,8 +1,6 @@
-# Users-Budgets Service 
+# Users-Budgets Service
 
-TO BE TRANSLATED
-
-A microservice for managing users and their budgets within the Smart Expenses system.
+Микросервис для управления пользователями и их бюджетами в рамках системы Smart Expenses
 
 ## 📋 Содержание
 
@@ -16,10 +14,10 @@ A microservice for managing users and their budgets within the Smart Expenses sy
 
 ## 🎯 Назначение сервиса
 
-`users-budgets-service` is responsible for:
+`users-budgets-service` отвечает за:
 
-- **User Management**: creating and retrieving user information
-- **Budget Management**: creating and retrieving budgets linked to users
+- **User Management**: создание, получение информации о пользователях
+- **Budget Management**: создание и получение бюджетов, привязанных к пользователям
 - **Security**: JWT аутентификация с проверкой прав доступа
 - **Integration**: предоставление REST API для взаимодействия с другими микросервисами
 
