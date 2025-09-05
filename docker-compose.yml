@@ -1,0 +1,49 @@
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: smart_expense_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      smart-expense-net:
+        aliases:
+          - postgres
+
+  usersbudgets-service:
+    build: .
+    container_name: usersbudgets-service
+    ports:
+      - "8082:8082"
+    environment:
+      - SERVER_PORT=8082
+      # Database connection properties
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/smart_expense_db
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update # Creates/updates schema automatically
+      - SPRING_SQL_INIT_MODE=always
+      - SPRING_JPA_DEFER_DATASOURCE_INITIALIZATION=true
+      # Optional JWT config (uncomment and set appropriately)
+      # - JWT_ISSUER_URI=http://auth:8080/realms/smart-expenses
+      # - JWT_AUDIENCE=smart-expenses
+    depends_on:
+      - postgres # Ensures postgres starts first
+    networks:
+      smart-expense-net:
+        aliases:
+          - usersbudgets-service
+
+volumes:
+  postgres_data:
+
+networks:
+  smart-expense-net:
+    external: true
+    name: smart-expense-net
